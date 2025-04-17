@@ -1,0 +1,18 @@
+tcga-crc-processing/
+├── R/
+│   ├── tcga_crc_data_preparation.R
+│   ├── check_data.R
+│   ├── fix_sample_ids.R
+│   └── check_survival_data.R
+├── data/
+│   └── .gitkeep
+├── results/
+│   └── .gitkeep
+├── clinical/
+│   └── ExtraEndpoints_Notes.csv
+├── logs/
+│   └── .gitkeep
+├── .gitignore
+├── README.md
+├── DESCRIPTION
+└── LICENSE

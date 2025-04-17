@@ -1,0 +1,98 @@
+﻿推荐使用的终点：,,  
+Recommended use of the endpoints:,,
+
+"对于临床结果终点，我们建议使用PFI（无进展生存期）和OS（总体生存期）。这两个终点相对准确。考虑到随访时间相对较短，PFI优于OS。详细建议请参见附带论文中的表3。"  
+"For clinical outcome endpoints, we recommend the use of PFI for progression-free interval, and OS for overall survival. Both endpoints are relatively accurate. Given the relatively short follow-up time, PFI is preferred over OS. Detailed recommendations please refer to Table 3 in the accompanying paper.",
+
+"DFI（无病生存期）是基于“treatment_outcome_first_course”（首次治疗结果）、“residual_tumor”（残余肿瘤）和“margin_status”（边缘状态）数据字段得出的。该终点相对准确。对于SKCM、THYM、UVM，DFI不可用。"  
+"DFI was derived based on data fields of 'treatment_outcome_first_course', 'residual_tumor', and 'margin_status'. The endpoint is relatively accurate. For SKCM, THYM, UVM, DFI is not available.",
+
+"DSS（疾病特异性生存期）对于CESC、PAAD和UVM相对准确，其他肿瘤类型则为近似值。"  
+"DSS is relatively accurate for CESC, PAAD, and UVM, and is approximated for other tumor types.",
+
+,,  
+,,
+
+数据列：,,  
+Data Columns:,,
+
+原始临床数据，，  
+Original Clinical Data,,
+
+"类型：癌症类型，例如brca、ov、blca、skcm、gbm等。"  
+"type: cancer type such as brca, ov, blca, skcm, gbm, and so on.",
+
+"来自主文件的10个特征：“age_at_initial_pathologic_diagnosis”（初次病理诊断年龄）、“gender”（性别）、“race”（种族）、“ajcc_pathologic_tumor_stage”（AJCC病理肿瘤分期）、“clinical_stage”（临床分期）、“histological_type”（组织学类型）、“histological_grade”（组织学分级）、“initial_pathologic_dx_year”（初次病理诊断年份）、“menopause_status”（绝经状态）、“birth_days_to”（出生到诊断的天数）；“clinical_stage”对于“THYM”是其“masaoka_stage”（正中期）值。"  
+"10 features from the main files: 'age_at_initial_pathologic_diagnosis', 'gender', 'race', 'ajcc_pathologic_tumor_stage', 'clinical_stage', 'histological_type', 'histological_grade', 'initial_pathologic_dx_year', 'menopause_status', 'birth_days_to'; The values in 'clinical_stage' for 'THYM' are its 'masaoka_stage' values.",
+
+更新的临床数据来自随访文件，，  
+Updated Clinical Data from follow-up files,,
+
+vital_status：来自随访数据的最新更新生命状态。  
+vital_status: the latest updated vital status from follow-up data.,
+
+tumor_status：来自随访数据的最新更新肿瘤状态。  
+tumor_status: the latest updated tumor status from follow-up data.,
+
+"last_contact_days_to：来自随访数据文件的最新“last_contact_days_to”更新。"  
+"last_contact_days_to: the latest 'last_contact_days_to' updated from the follow-up data files.",
+
+"death_days_to：来自随访数据文件的可用“death_days_to”。"  
+"death_days_to: the available 'death_days_to' from the follow-up data files.",
+
+"cause_of_death：来自随访数据文件的可用“cause_of_death”。"  
+"cause_of_death: the available 'cause_of_death' from the follow-up data files.",
+
+"new_tumor_event_type、new_tumor_event_site、new_tumor_event_site_other是对应于new_tumor_event_dx_days_to的值。"  
+"new_tumor_event_type, new_tumor_event_site, new_tumor_event_site_other are the values corresponding to new_tumor_event_dx_days_to.",
+
+new_tumor_event_dx_days_to：来自所有随访文件中new_tumor_event_dx_days_to的最小天数，  
+new_tumor_event_dx_days_to: smallest days from all new_tumor_event_dx_days_to in follow-up files,
+
+"treatment_outcome_first_course（用于推导DFI）：来自主文件和随访文件的可用数据。"  
+"treatment_outcome_first_course (for deriving DFI): the available data in the field of 'treatment_outcome_first_course' from the main and follow-up files.",
+
+"residual_tumor（用于推导DFI）：5种疾病没有“treatment_outcome_first_course”，但在主文件中有“residual_tumor”。这5种疾病是CHOL、LIHC、MESO、SARC和THCA。"  
+"residual_tumor (for deriving DFI): 5 diseases did not have 'treatment_outcome_first_course' but had 'residual_tumor' from the main file. These 5 diseases were CHOL, LIHC, MESO, SARC, and THCA.",
+
+"margin_status（用于推导DFI）：BRCA没有“treatment_outcome_first_course”或“residual_tumor”，但有“margin_status”。SARC也有该字段，但其“residual_tumor”字段被使用。"  
+"margin_status (for deriving DFI): BRCA did not have 'treatment_outcome_first_course' nor 'residual_tumor' but had 'margin_status'. SARC also had this field but its field of 'residual_tumor' was used.",
+
+派生的临床数据，，  
+Derived Clinical Data,,
+
+"OS：总体生存事件，1表示因任何原因死亡，0表示存活。"  
+"OS: overall survival event, 1 for death from any cause, 0 for alive.",
+
+"OS.time：总体生存时间（天），为last_contact_days_to或death_days_to中较大的值。"  
+"OS.time: overall survival time in days, last_contact_days_to or death_days_to, whichever is larger.",
+
+"DSS：疾病特异性生存事件，1表示患者的vital_status为死亡且tumor_status为有肿瘤。如果患者因cause_of_death字段中显示的疾病死亡，则DSS状态为1，0表示患者的vital_status为存活或其vital_status为死亡且tumor_status为无肿瘤。这不是100%准确的定义，但这是我们对该数据集所能做的最好定义。技术上讲，患者可能有肿瘤但因车祸死亡，因此被错误地视为事件。"  
+"DSS: disease-specific survival event, 1 for patient whose vital_status was Dead and tumor_status was WITH TUMOR. If a patient died from the disease shown in field of cause_of_death, the status of DSS would be 1 for the patient. 0 for patient whose vital_status was Alive or whose vital_status was Dead and tumor_status was TUMOR FREE. This is not a 100% accurate definition but is the best we could do with this dataset. Technically a patient could be with tumor but died of a car accident and therefore incorrectly considered as an event.",
+
+"DSS.time：疾病特异性生存时间（天），为last_contact_days_to或death_days_to中较大的值。"  
+"DSS.time: disease-specific survival time in days, last_contact_days_to or death_days_to, whichever is larger.",
+
+"DFI：无病生存事件，1表示患者有新肿瘤事件，无论是局部复发、远处转移、新原发肿瘤，或因癌症死亡而没有新肿瘤事件，包括新肿瘤事件类型为N/A的情况。无病生存的定义为：首先，treatment_outcome_first_course为“完全缓解/反应”；如果肿瘤类型没有“treatment_outcome_first_course”，则无病生存定义为“residual_tumor”字段中的“R0”值；否则，无病生存定义为“margin_status”字段中的“negative”值。如果肿瘤类型没有这些字段，则其DFI为NA。"  
+"DFI: disease-free interval event, 1 for patient having new tumor event whether it is a local recurrence, distant metastasis, new primary tumor of the cancer, including cases with a new tumor event whose type is N/A. Disease free was defined by: first, treatment_outcome_first_course is 'Complete Remission/Response'; if the tumor type doesn't have 'treatment_outcome_first_course' then disease-free was defined by the value 'R0' in the field of 'residual_tumor'; otherwise, disease-free was defined by the value 'negative' in the field of 'margin_status'. If the tumor type did not have any of these fields, then its DFI was NA.",
+
+,,0表示被审查的情况，否则。其他器官的新原发肿瘤被视为被审查；没有新肿瘤事件的患者被排除在外；IV期患者也被排除在外。  
+,,0 for censored otherwise. New primary tumor in other organ was censored; patients who were Dead with tumor without new tumor event are excluded; patients with stage IV are excluded too.
+
+"DFI.time：无病生存时间（天），对于事件，使用new_tumor_event_dx_days_to；对于被审查的情况，使用last_contact_days_to或death_days_to中较适用的值。"  
+"DFI.time: disease-free interval time in days, new_tumor_event_dx_days_to for events, or for censored cases, either last_contact_days_to or death_days_to, whichever is applicable.",
+
+"PFI：无进展生存事件，1表示患者有新肿瘤事件，无论是疾病进展、局部复发、远处转移、新原发肿瘤，或因癌症死亡而没有新肿瘤事件，包括新肿瘤事件类型为N/A的情况。"  
+"PFI: progression-free interval event, 1 for patient having new tumor event whether it was a progression of disease, local recurrence, distant metastasis, new primary tumors all sites, or died with the cancer without new tumor event, including cases with a new tumor event whose type is N/A.",
+
+,,0表示被审查的情况，否则。  
+,,0 for censored otherwise.
+
+"PFI.time：无进展生存时间（天），对于事件，使用new_tumor_event_dx_days_to或death_days_to中较适用的值；对于被审查的情况，使用last_contact_days_to或death_days_to中较适用的值。"  
+"PFI.time: progression-free interval time in days, for events, either new_tumor_event_dx_days_to or death_days_to, whichever is applicable; or for censored cases, either last_contact_days_to or death_days_to, whichever is applicable.",
+
+其他，，  
+Other,,
+
+"隐私保护：显示该案例是否被隐私保护。"  
+"Redaction: to show if the case is redacted.",
