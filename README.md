@@ -23,7 +23,7 @@
 
 1. 克隆此仓库：
 ```bash
-git clone https://github.com/你的用户名/tcga-crc-processing.git
+git clone https://github.com/calvinobai/tcga-crc-processing.git
 cd tcga-crc-processing
 ```
 
